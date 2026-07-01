@@ -1,77 +1,67 @@
-import React, { useState } from 'react';
-import { BiSearch, BiFilter } from 'react-icons/bi';
+import React from 'react';
 
-const ChatList = ({ activeChat, setActiveChat }) => {
-  const [searchQuery, setSearchQuery] = useState('');
-
-  // Mock data for the active chat stream list
-  const conversations = [
-    { id: 1, name: 'Emily Johnson', message: 'Is the server deploy completed?', time: '09:42 AM', unread: 2, online: true, avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330' },
-    { id: 2, name: 'Michael Brown', message: 'Let us connect over a video call later.', time: 'Yesterday', unread: 0, online: false, avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d' },
-    { id: 3, name: 'Jessica Taylor', message: 'Sent a sticker over the group chat.', time: 'Monday', unread: 0, online: true, avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80' }
+const ChatList = () => {
+  // Dummy Data for Preview matching screen 1000001198.png
+  const dummyChats = [
+    { id: 1, name: 'Emily Johnson', message: 'Typing...', time: '2m', unread: 2, online: true },
+    { id: 2, name: 'Liam Davis', message: 'Hey! How are you?', time: '10m', unread: 1, online: false },
+    { id: 3, name: 'Sophia Martinez', message: 'Voice message', time: '25m', unread: 0, online: false },
+    { id: 4, name: 'Noah Wilson', message: "Let's catch up later.", time: '1h', unread: 0, online: false }
   ];
 
   return (
-    <div className="w-[340px] h-full bg-white border-r border-[#E2E8F0] flex flex-col shrink-0">
-      {/* Search Header Section */}
-      <div className="p-4 border-b border-[#F0F4F8]">
-        <div className="flex items-center gap-3">
-          <div className="flex-1 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-3 py-2.5 flex items-center gap-2">
-            <BiSearch className="text-[#A0AEC0]" size={18} />
-            <input 
-              type="text" 
-              placeholder="Search conversations..." 
-              className="bg-transparent text-sm w-full focus:outline-none placeholder-[#A0AEC0] text-[#1E1E24]"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-          <button className="p-2.5 bg-[#F8FAFC] border border-[#E2E8F0] text-[#718096] hover:bg-[#F0EEFF] hover:text-[#635BFF] rounded-xl transition-all">
-            <BiFilter size={18} />
-          </button>
-        </div>
+    <div style={styles.chatListContainer}>
+      <h2 style={styles.headerTitle}>Messages</h2>
+      
+      {/* Search Bar */}
+      <div style={styles.searchBox}>
+        <input type="text" placeholder="Search messages or users" style={styles.searchInput} />
       </div>
 
-      {/* Dynamic Conversations Stream */}
-      <div className="flex-1 overflow-y-auto custom-scrollbar p-2 space-y-1">
-        {conversations.map((chat) => (
-          <button
-            key={chat.id}
-            onClick={() => setActiveChat(chat)}
-            className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all text-left ${
-              activeChat.id === chat.id 
-                ? 'bg-[#F0EEFF]' 
-                : 'hover:bg-[#F8FAFC]'
-            }`}
-          >
-            <div className="relative">
-              <img src={chat.avatar} alt={chat.name} className="w-11 h-11 rounded-full object-cover" />
-              {chat.online && (
-                <span className="absolute bottom-0 right-0 w-3 h-3 bg-[#38A169] border-2 border-white rounded-full"></span>
-              )}
+      {/* User List */}
+      <div style={styles.listContainer}>
+        {dummyChats.map((chat) => (
+          <div key={chat.id} style={chat.id === 1 ? { ...styles.chatCard, ...styles.activeCard } : styles.chatCard}>
+            <div style={styles.avatarContainer}>
+              <div style={styles.avatar}>👤</div>
+              {chat.online && <div style={styles.onlineStatus} />}
             </div>
-
-            <div className="flex-1 min-w-0">
-              <div className="flex justify-between items-baseline mb-0.5">
-                <h4 className={`text-sm font-semibold truncate ${activeChat.id === chat.id ? 'text-[#635BFF]' : 'text-[#1E1E24]'}`}>
-                  {chat.name}
-                </h4>
-                <span className="text-[10px] text-[#A0AEC0] font-medium shrink-0">{chat.time}</span>
+            <div style={styles.chatInfo}>
+              <div style={styles.row}>
+                <span style={styles.name}>{chat.name}</span>
+                <span style={styles.time}>{chat.time}</span>
               </div>
-              <p className="text-xs text-[#718096] truncate font-medium">{chat.message}</p>
+              <div style={styles.row}>
+                <span style={chat.id === 1 ? styles.typing : styles.message}>{chat.message}</span>
+                {chat.unread > 0 && <span style={styles.badge}>{chat.unread}</span>}
+              </div>
             </div>
-
-            {chat.unread > 0 && (
-              <div className="w-5 h-5 bg-[#635BFF] text-white font-bold text-[10px] rounded-full flex items-center justify-center shrink-0">
-                {chat.unread}
-              </div>
-            )}
-          </button>
+          </div>
         ))}
       </div>
     </div>
   );
 };
 
+const styles = {
+  chatListContainer: { width: '320px', height: '100vh', borderRight: '1px solid #eaeaea', display: 'flex', flexDirection: 'column', backgroundColor: '#fff', padding: '24px 16px' },
+  headerTitle: { fontSize: '22px', fontWeight: 'bold', color: '#111827', marginBottom: '20px' },
+  searchBox: { marginBottom: '20px' },
+  searchInput: { width: '100%', padding: '12px 16px', borderRadius: '12px', border: '1px solid #f3f4f6', backgroundColor: '#f9fafb', fontSize: '14px', outline: 'none' },
+  listContainer: { display: 'flex', flexDirection: 'column', gap: '4px', overflowY: 'auto' },
+  chatCard: { display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', borderRadius: '12px', cursor: 'pointer' },
+  activeCard: { backgroundColor: '#f3f4f6' },
+  avatarContainer: { position: 'relative' },
+  avatar: { width: '44px', height: '44px', borderRadius: '50%', backgroundColor: '#e5e7eb', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px' },
+  onlineStatus: { width: '12px', height: '12px', backgroundColor: '#10b981', borderRadius: '50%', border: '2px solid #fff', position: 'absolute', bottom: '2px', right: '2px' },
+  chatInfo: { flex: 1, display: 'flex', flexDirection: 'column', gap: '4px' },
+  row: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
+  name: { fontSize: '15px', fontWeight: '600', color: '#111827' },
+  time: { fontSize: '12px', color: '#9ca3af' },
+  message: { fontSize: '13px', color: '#6b7280', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '160px' },
+  typing: { fontSize: '13px', color: '#10b981', fontWeight: '500' },
+  badge: { backgroundColor: '#6366f1', color: '#fff', fontSize: '11px', fontWeight: 'bold', padding: '2px 6px', borderRadius: '10px' }
+};
+
 export default ChatList;
-     
+            
