@@ -1,33 +1,34 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Login from './pages/Login';
 import Register from './pages/Register';
-import OTP from './pages/OTP';
-import Home from './pages/Home';
-import NotFound from './pages/NotFound';
+import Login from './pages/Login';
+import Chat from './pages/Chat';
 
 function App() {
-  // Set to true temporarily so you can view the primary Chat Home layout immediately.
-  // This will be linked to backend authorization validation state later.
-  const isAuthenticated = true; 
+  // Check if the user is logged in by looking for the token
+  const isAuthenticated = !!localStorage.getItem('token');
 
   return (
     <Router>
       <Routes>
+        {/* Default Route: Redirects to Login if not authenticated, otherwise to Chat */}
+        <Route 
+          path="/" 
+          element={isAuthenticated ? <Navigate to="/chat" /> : <Navigate to="/login" />} 
+        />
+
         {/* Authentication Routes */}
-        <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to="/" />} />
-        <Route path="/register" element={!isAuthenticated ? <Register /> : <Navigate to="/" />} />
-        <Route path="/verify-otp" element={!isAuthenticated ? <OTP /> : <Navigate to="/" />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
 
-        {/* Core Live Chat Application Interface */}
-        <Route path="/" element={isAuthenticated ? <Home /> : <Navigate to="/login" />} />
+        {/* Protected Dashboard Route */}
+        <Route path="/chat" element={<Chat />} />
 
-        {/* Fallback 404 Route */}
-        <Route path="*" element={<NotFound />} />
+        {/* Fallback Route: Redirects any unknown URL back to main root */}
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
   );
 }
 
 export default App;
-          
