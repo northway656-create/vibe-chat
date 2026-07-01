@@ -1,96 +1,107 @@
 import React, { useState } from 'react';
-import { BiPhoneCall, BiVideo, BiSidebar, BiSend, BiSmile, BiPaperclip } from 'react-icons/bi';
+import { FiPhone, FiVideo, FiInfo, FiSmile, FiMic, FiPlus } from 'react-icons/fi';
 
-const ChatWindow = ({ activeChat, toggleProfile }) => {
-  const [message, setMessage] = useState('');
+const ChatWindow = () => {
+  const [messageText, setMessageText] = useState('');
   
-  // Static mock message history matching the premium theme UI
-  const messageHistory = [
-    { id: 1, sender: 'them', text: 'Hey there! Welcome to the new VibeChat testing channel.', time: '09:30 AM' },
-    { id: 2, sender: 'me', text: 'Wow, this looks perfectly minimalist and extremely clean!', time: '09:32 AM' },
-    { id: 3, sender: 'them', text: 'Is the live deployment working fine on Render?', time: '09:40 AM' },
-  ];
+  // Dummy Conversation data matching screen 1000001198.png
+  const [messages, setMessages] = useState([
+    { id: 1, sender: 'them', text: 'Hey there! 👋', time: '02:10 PM' },
+    { id: 2, sender: 'me', text: 'Hi Emily! How are you doing?', time: '02:11 PM' },
+    { id: 3, sender: 'them', text: "I'm good, thanks! You?", time: '02:11 PM' },
+    { id: 4, sender: 'me', text: "Doing great! What's up?", time: '02:12 PM' },
+    { id: 5, sender: 'me', text: 'That\'s awesome! 😁', time: '02:13 PM' },
+  ]);
 
-  const handleSendMessage = (e) => {
+  const handleSend = (e) => {
     e.preventDefault();
-    if (!message.trim()) return;
-    setMessage('');
+    if (!messageText.trim()) return;
+
+    const newMessage = {
+      id: messages.length + 1,
+      sender: 'me',
+      text: messageText,
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+
+    setMessages([...messages, newMessage]);
+    setMessageText('');
   };
 
   return (
-    <div className="flex-1 h-full bg-[#F8F9FD] flex flex-col overflow-hidden">
-      {/* Active Conversation Control Header */}
-      <div className="h-[64px] bg-white border-b border-[#E2E8F0] px-6 flex items-center justify-between shrink-0">
-        <div className="flex items-center gap-3">
-          <img src={activeChat.avatar} alt={activeChat.name} className="w-10 h-10 rounded-full object-cover" />
+    <div style={styles.chatWindowContainer}>
+      {/* Top Header Bar */}
+      <div style={styles.header}>
+        <div style={styles.userInfo}>
+          <div style={styles.avatar}>👤</div>
           <div>
-            <h3 className="text-sm font-bold text-[#1E1E24]">{activeChat.name}</h3>
-            <p className="text-[10px] text-[#38A169] font-semibold">
-              {activeChat.online ? 'Active Now' : 'Offline'}
-            </p>
+            <div style={styles.userName}>Emily Johnson</div>
+            <div style={styles.userStatus}>Online</div>
           </div>
         </div>
-
-        {/* Media Calling and Action Triggers */}
-        <div className="flex items-center gap-2">
-          <button className="p-2 text-[#718096] hover:bg-gray-50 rounded-lg transition-colors">
-            <BiPhoneCall size={20} />
-          </button>
-          <button className="p-2 text-[#718096] hover:bg-gray-50 rounded-lg transition-colors">
-            <BiVideo size={20} />
-          </button>
-          <div className="w-[1px] h-5 bg-[#E2E8F0] mx-1"></div>
-          <button onClick={toggleProfile} className="p-2 text-[#718096] hover:bg-[#F0EEFF] hover:text-[#635BFF] rounded-lg transition-colors">
-            <BiSidebar size={20} />
-          </button>
+        <div style={styles.headerIcons}>
+          <button style={styles.iconBtn}><FiPhone size={20} /></button>
+          <button style={styles.iconBtn}><FiVideo size={20} /></button>
+          <button style={styles.iconBtn}><FiInfo size={20} /></button>
         </div>
       </div>
 
-      {/* Live Chat Messaging Timeline Message Viewport */}
-      <div className="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-4 bg-[#F8F9FD]">
-        {messageHistory.map((msg) => (
-          <div key={msg.id} className={`flex ${msg.sender === 'me' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`max-w-[70%] px-4 py-3 rounded-2xl shadow-sm text-sm font-medium ${
-              msg.sender === 'me' 
-                ? 'bg-[#635BFF] text-white rounded-tr-none' 
-                : 'bg-white text-[#1E1E24] rounded-tl-none border border-[#E2E8F0]'
-            }`}>
-              <p>{msg.text}</p>
-              <span className={`text-[9px] block mt-1 text-right ${msg.sender === 'me' ? 'text-purple-200' : 'text-[#A0AEC0]'}`}>
-                {msg.time}
-              </span>
+      {/* Chat Messages Scrolling Area */}
+      <div style={styles.messageArea}>
+        {messages.map((msg) => (
+          <div key={msg.id} style={msg.sender === 'me' ? styles.myRow : styles.theirRow}>
+            <div style={msg.sender === 'me' ? styles.myBubble : styles.theirBubble}>
+              <div>{msg.text}</div>
+              <div style={msg.sender === 'me' ? styles.myTime : styles.theirTime}>{msg.time}</div>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Dynamic Interaction Pipeline / Message Input Bar */}
-      <div className="p-4 bg-white border-t border-[#E2E8F0]">
-        <form onSubmit={handleSendMessage} className="flex items-center gap-3">
-          <div className="flex-1 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-4 py-2.5 flex items-center gap-3">
-            <button type="button" className="text-[#A0AEC0] hover:text-[#718096] transition-all">
-              <BiSmile size={22} />
-            </button>
-            <input 
-              type="text" 
-              placeholder={`Write a premium message to ${activeChat.name}...`}
-              className="bg-transparent text-sm w-full focus:outline-none placeholder-[#A0AEC0] text-[#1E1E24]"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-            />
-            <button type="button" className="text-[#A0AEC0] hover:text-[#718096] transition-all">
-              <BiPaperclip size={20} />
-            </button>
-          </div>
-          
-          <button type="submit" className="p-3 bg-[#635BFF] text-white hover:bg-[#4F46E5] rounded-xl shadow-md shadow-purple-100 transition-all">
-            <BiSend size={18} />
-          </button>
-        </form>
-      </div>
+      {/* Bottom Message Input Form */}
+      <form onSubmit={handleSend} style={styles.inputContainer}>
+        <button type="button" style={styles.inputActionBtn}><FiPlus size={20} /></button>
+        <div style={styles.inputWrapper}>
+          <input
+            type="text"
+            placeholder="Type a message..."
+            value={messageText}
+            onChange={(e) => setMessageText(e.target.value)}
+            style={styles.inputField}
+          />
+          <button type="button" style={styles.insideInputBtn}><FiSmile size={20} /></button>
+          <button type="button" style={styles.insideInputBtn}><FiMic size={20} /></button>
+        </div>
+      </form>
     </div>
   );
 };
 
-export default ChatWindow;
+const styles = {
+  chatWindowContainer: { flex: 1, height: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#fff' },
+  header: { height: '76px', borderBottom: '1px solid #eaeaea', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 24px' },
+  userInfo: { display: 'flex', alignItems: 'center', gap: '12px' },
+  avatar: { width: '40px', height: '40px', borderRadius: '50%', backgroundColor: '#e5e7eb', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px' },
+  userName: { fontSize: '16px', fontWeight: '600', color: '#111827' },
+  userStatus: { fontSize: '13px', color: '#10b981', fontWeight: '500' },
+  headerIcons: { display: 'flex', gap: '8px' },
+  iconBtn: { background: 'none', border: 'none', padding: '8px', color: '#6b7280', cursor: 'pointer', borderRadius: '50%' },
+  messageArea: { flex: 1, padding: '24px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '16px', backgroundColor: '#fafafa' },
+  myRow: { display: 'flex', justifyContent: 'flex-end' },
+  theirRow: { display: 'flex', justifyContent: 'flex-start' },
+  myBubble: { maxWidth: '60%', backgroundColor: '#6366f1', color: '#fff', padding: '12px 16px', borderRadius: '16px 16px 2px 16px', fontSize: '15px', boxShadow: '0 2px 4px rgba(99, 102, 241, 0.2)' },
+  theirBubble: { maxWidth: '60%', backgroundColor: '#f3f4f6', color: '#111827', padding: '12px 16px', borderRadius: '16px 16px 16px 2px', fontSize: '15px' },
+  myTime: { fontSize: '11px', color: '#e0e7ff', textAlign: 'right', marginTop: '4px' },
+  theirTime: { fontSize: '11px', color: '#9ca3af', textAlign: 'left', marginTop: '4px' },
+  inputContainer: { padding: '16px 24px', display: 'flex', alignItems: 'center', gap: '12px', borderTop: '1px solid #eaeaea', backgroundColor: '#fff' },
+  inputActionBtn: { background: '#f3f4f6', border: 'none', width: '42px', height: '42px', borderRadius: '50%', color: '#4b5563', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' },
+  inputWrapper: { flex: 1, position: 'relative', display: 'flex', alignItems: 'center' },
+  inputField: { width: '100%', padding: '12px 90px 12px 16px', borderRadius: '24px', border: '1px solid #e5e7eb', backgroundColor: '#f9fafb', fontSize: '15px', outline: 'none' },
+  insideInputBtn: { position: 'absolute', right: '16px', background: 'none', border: 'none', color: '#9ca3af', cursor: 'pointer', padding: '4px' }
+};
 
+// Adjusting button positioning override
+styles.insideInputBtn = { ...styles.insideInputBtn, transform: 'translateX(-30px)' }; 
+
+export default ChatWindow;
+        
