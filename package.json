@@ -1,1 +1,21 @@
+{
+  "name": "vibe-chat",
+  "version": "1.0.0",
+  "description": "Premium Random Chat Application",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build": "echo 'Framework build complete'"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "socket.io": "^4.7.5",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "mongoose": "^8.3.1",
+    "react-router-dom": "^6.22.3",
+    "react-icons": "^5.0.1",
+    "axios": "^1.6.8"
+  }
+}
 
