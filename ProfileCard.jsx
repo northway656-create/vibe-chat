@@ -1,47 +1,77 @@
 import React from 'react';
-import { BiUser, BiEnvelope, BiShield } from 'react-icons/bi';
+import { FiPhone, FiVideo, FiBell, FiSlash, FiFlag, FiChevronRight } from 'react-icons/fi';
 
-const ProfileCard = ({ activeChat }) => {
+const ProfileCard = () => {
+  // Dummy media items to display in the grid
+  const mediaFiles = [1, 2, 3, 4];
+
   return (
-    <div className="w-[300px] h-full bg-white border-l border-[#E2E8F0] flex flex-col p-6 shrink-0 overflow-y-auto custom-scrollbar">
-      {/* Profile Overview Card Header */}
-      <div className="flex flex-col items-center text-center pb-6 border-b border-[#F0F4F8]">
-        <img src={activeChat.avatar} alt={activeChat.name} className="w-24 h-24 rounded-full object-cover ring-4 ring-purple-50 mb-4" />
-        <h3 className="text-base font-bold text-[#1E1E24]">{activeChat.name}</h3>
-        <p className="text-xs text-[#718096] font-medium mt-0.5">Product Designer</p>
+    <div style={styles.profileContainer}>
+      {/* Big User Header Info */}
+      <div style={styles.profileHeader}>
+        <div style={styles.avatarLarge}>👤</div>
+        <h3 style={styles.profileName}>Emily Johnson</h3>
+        <p style={styles.profileStatus}>Online</p>
       </div>
 
-      {/* Meta Identity and Structural Information */}
-      <div className="mt-6 space-y-5">
-        <h4 className="text-xs font-bold text-[#A0AEC0] tracking-wider uppercase">User Information</h4>
-        
-        <div className="flex items-center gap-3 text-sm">
-          <div className="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center text-[#718096]">
-            <BiUser size={18} />
+      {/* Quick Action Icons Bar */}
+      <div style={styles.actionRow}>
+        <div style={styles.actionItem}>
+          <button style={styles.actionCircle}><FiPhone size={18} /></button>
+          <span style={styles.actionLabel}>Voice Call</span>
+        </div>
+        <div style={styles.actionItem}>
+          <button style={styles.actionCircle}><FiVideo size={18} /></button>
+          <span style={styles.actionLabel}>Video Call</span>
+        </div>
+        <div style={styles.actionItem}>
+          <button style={styles.actionCircle}><FiBell size={18} /></button>
+          <span style={styles.actionLabel}>Mute</span>
+        </div>
+      </div>
+
+      <hr style={styles.divider} />
+
+      {/* Media, Files and Links Grid Section */}
+      <div style={styles.sectionHeader}>
+        <span style={styles.sectionTitle}>Media, files and links</span>
+        <div style={styles.sectionMore}>
+          <span>12</span>
+          <FiChevronRight size={16} />
+        </div>
+      </div>
+
+      <div style={styles.mediaGrid}>
+        {mediaFiles.map((item) => (
+          <div key={item} style={styles.mediaBox}>
+            🖼️
           </div>
-          <div>
-            <p className="text-[11px] text-[#A0AEC0] font-semibold">Username</p>
-            <p className="text-xs font-semibold text-[#1E1E24]">@emily_design</p>
+        ))}
+      </div>
+
+      <hr style={styles.divider} />
+
+      {/* Settings / Privacy / Reporting Controls Options */}
+      <div style={styles.optionsList}>
+        <div style={styles.optionRow}>
+          <div style={styles.optionInfo}>
+            <FiBell size={18} color="#4b5563" />
+            <span style={styles.optionText}>Mute notifications</span>
+          </div>
+          <input type="checkbox" style={styles.toggleSwitch} />
+        </div>
+
+        <div style={{ ...styles.optionRow, ...styles.dangerRow }}>
+          <div style={styles.optionInfo}>
+            <FiSlash size={18} color="#ef4444" />
+            <span style={{ ...styles.optionText, color: '#ef4444' }}>Block user</span>
           </div>
         </div>
 
-        <div className="flex items-center gap-3 text-sm">
-          <div className="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center text-[#718096]">
-            <BiEnvelope size={18} />
-          </div>
-          <div>
-            <p className="text-[11px] text-[#A0AEC0] font-semibold">Email Address</p>
-            <p className="text-xs font-semibold text-[#1E1E24]">emily@example.com</p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-3 text-sm">
-          <div className="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center text-[#718096]">
-            <BiShield size={18} />
-          </div>
-          <div>
-            <p className="text-[11px] text-[#A0AEC0] font-semibold">Encryption</p>
-            <p className="text-xs font-semibold text-[#38A169]">End-to-End Encrypted</p>
+        <div style={{ ...styles.optionRow, ...styles.dangerRow }}>
+          <div style={styles.optionInfo}>
+            <FiFlag size={18} color="#ef4444" />
+            <span style={{ ...styles.optionText, color: '#ef4444' }}>Report user</span>
           </div>
         </div>
       </div>
@@ -49,5 +79,29 @@ const ProfileCard = ({ activeChat }) => {
   );
 };
 
+const styles = {
+  profileContainer: { width: '340px', height: '100vh', backgroundColor: '#fff', borderLeft: '1px solid #eaeaea', display: 'flex', flexDirection: 'column', padding: '24px' },
+  profileHeader: { display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginTop: '16px', marginBottom: '24px' },
+  avatarLarge: { width: '96px', height: '96px', borderRadius: '50%', backgroundColor: '#e5e7eb', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '42px', marginBottom: '16px', position: 'relative' },
+  profileName: { fontSize: '18px', fontWeight: '700', color: '#111827', margin: '0 0 4px 0' },
+  profileStatus: { fontSize: '14px', color: '#10b981', fontWeight: '500', margin: 0 },
+  actionRow: { display: 'flex', justifyContent: 'center', gap: '24px', marginBottom: '24px' },
+  actionItem: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' },
+  actionCircle: { width: '40px', height: '40px', borderRadius: '50%', border: '1px solid #e5e7eb', backgroundColor: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#4b5563', cursor: 'pointer' },
+  actionLabel: { fontSize: '12px', color: '#6b7280' },
+  divider: { border: 0, borderTop: '1px solid #f3f4f6', margin: '16px 0' },
+  sectionHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' },
+  sectionTitle: { fontSize: '14px', fontWeight: '600', color: '#111827' },
+  sectionMore: { display: 'flex', alignItems: 'center', gap: '4px', fontSize: '14px', color: '#6b7280', cursor: 'pointer' },
+  mediaGrid: { display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', marginBottom: '8px' },
+  mediaBox: { aspectRatio: '1', backgroundColor: '#f3f4f6', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px' },
+  optionsList: { display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '8px' },
+  optionRow: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' },
+  optionInfo: { display: 'flex', alignItems: 'center', gap: '12px' },
+  optionText: { fontSize: '14px', fontWeight: '500', color: '#374151' },
+  toggleSwitch: { cursor: 'pointer', width: '36px', height: '20px' },
+  dangerRow: { paddingTop: '4px' }
+};
+
 export default ProfileCard;
-            
+        
